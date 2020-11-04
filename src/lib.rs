@@ -1,24 +1,5 @@
-//! A Rust library for working with `bgm_property.bin` files from Smash Ultimate. This allows for
+//! A Rust library for working with `soundlabelinfo.sli` files from Smash Ultimate. This allows for
 //! modifying various properties associated with  background music.
-//! 
-/// ```rust
-/// # fn main() -> binread::BinResult<()> {
-/// use bgm_property::BgmPropertyFile;
-/// 
-/// let mut file = BgmPropertyFile::open("bgm_property.bin")?;
-/// 
-/// for entry in file.entries() {
-///     println!("name_id: {:#X}", entry.name_id);
-/// }
-/// 
-/// for entry in file.entries_mut() {
-///     entry.loop_start_sample = 0;
-/// }
-/// 
-/// file.save("bgm_property_out.bin")?;
-/// # Ok(())
-/// # }
-/// ```
 
 use binread::{BinRead, BinReaderExt, derive_binread};
 use binwrite::{BinWrite, WriterOption};
@@ -30,6 +11,7 @@ use std::io::{self, Write, BufReader, BufWriter};
 #[cfg(feature = "derive_serde")]
 use serde::{Serialize, Deserialize};
 
+#[cfg(feature = "derive_serde")]
 mod hash40;
 
 /// Type alias for Hash40
@@ -37,29 +19,11 @@ pub type Hash40 = u64;
 
 pub use binread::{BinResult as Result, Error};
 
-/// ```rust
-/// # fn main() -> binread::BinResult<()> {
-/// use bgm_property::BgmPropertyFile;
-/// 
-/// let mut file = BgmPropertyFile::open("bgm_property.bin")?;
-/// 
-/// for entry in file.entries() {
-///     println!("name_id: {:#X}", entry.name_id);
-/// }
-/// 
-/// for entry in file.entries_mut() {
-///     entry.loop_start_sample = 0;
-/// }
-/// 
-/// file.save("bgm_property_out.bin")?;
-/// # Ok(())
-/// # }
-/// ```
 #[derive_binread]
 #[cfg_attr(feature = "derive_serde", derive(Serialize, Deserialize))]
 #[derive(Debug)]
-#[br(magic = b"PMGB")]
-pub struct BgmPropertyFile (
+#[br(magic = b"SLI\0\x01\0\0\0")]
+pub struct SliFile (
     #[br(temp)]
     u32,
 
@@ -67,31 +31,27 @@ pub struct BgmPropertyFile (
     Vec<Entry>,
 );
 
-impl BinWrite for BgmPropertyFile {
+impl BinWrite for SliFile {
     fn write_options<W: Write>(&self, writer: &mut W, options: &WriterOption) -> io::Result<()> {
+        let mut entries = self.0.clone();
+        entries.sort_unstable_by(|a, b| a.tone_name.cmp(&b.tone_name));
+
         (
-            "PMGB",
+            "SLI\0\x01\0\0\0",
             self.0.len() as u32,
-            &self.0
+            entries
         ).write_options(writer, options)
     }
 }
 
 /// An entry representing a single nus3audio background music file
 #[cfg_attr(feature = "derive_serde", derive(Serialize, Deserialize))]
-#[derive(BinRead, BinWrite, Debug)]
+#[derive(BinRead, BinWrite, Debug, Clone)]
 pub struct Entry {
-    #[serde(with = "serde_hash40")]
-    pub name_id: Hash40,
-    pub unk: u32,
-    pub loop_start_sample: u32,
-    pub unk_sample: u32,
-    pub loop_end_sample: u32,
-    pub unk2: u32,
-    
-    #[br(pad_after = 4)]
-    #[binwrite(pad_after(0x4))]
-    pub total_samples: u32,
+    #[cfg_attr(feature = "derive_serde", serde(with = "serde_hash40"))]
+    pub tone_name: Hash40,
+    pub nus3bank_id: u32,
+    pub tone_id: u32,
 }
 
 #[cfg(feature = "derive_serde")]
@@ -154,7 +114,7 @@ mod serde_hash40 {
 }
 
 
-impl BgmPropertyFile {
+impl SliFile {
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
         BufReader::new(File::open(path)?).read_le()
     }
@@ -169,7 +129,7 @@ impl BgmPropertyFile {
     }
 
     pub fn new(entries: Vec<Entry>) -> Self {
-        BgmPropertyFile(entries)
+        SliFile(entries)
     }
 
     pub fn entries(&self) -> &Vec<Entry> {
@@ -187,8 +147,8 @@ mod tests {
 
     #[test]
     fn test_round_trip() {
-        let original = std::fs::read("bgm_property.bin").unwrap();
-        let bgm_property = BgmPropertyFile::open("bgm_property.bin").unwrap();
+        let original = std::fs::read("soundlabelinfo.sli").unwrap();
+        let bgm_property = SliFile::open("soundlabelinfo.sli").unwrap();
 
         println!("{:#X?}", bgm_property);
 

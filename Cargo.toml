@@ -1,15 +1,15 @@
 [package]
-name = "smash-bgm-property"
+name = "smash-sli"
 version = "0.8.0"
 authors = ["jam1garner <8260240+jam1garner@users.noreply.github.com>"]
 edition = "2018"
 
 [lib]
-name = "bgm_property"
+name = "sli"
 path = "src/lib.rs"
 
 [[bin]]
-name = "bgm-property"
+name = "sli"
 path = "src/main.rs"
 required-features = ["cli"]
 
