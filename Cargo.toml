@@ -1,0 +1,29 @@
+[package]
+name = "smash-bgm-property"
+version = "0.8.0"
+authors = ["jam1garner <8260240+jam1garner@users.noreply.github.com>"]
+edition = "2018"
+
+[lib]
+name = "bgm_property"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bgm-property"
+path = "src/main.rs"
+required-features = ["cli"]
+
+[dependencies]
+binread = "1.4.0"
+binwrite = "0.2.1"
+
+serde = { version = "1", features = ["derive"], optional = true }
+lazy_static = { version = "1", optional = true }
+
+# Only for the CLI
+structopt = { version = "0.3", optional = true }
+serde_yaml = { version = "0.8", optional = true }
+
+[features]
+cli = ["structopt", "derive_serde", "serde_yaml"]
+derive_serde = ["serde", "lazy_static"]
