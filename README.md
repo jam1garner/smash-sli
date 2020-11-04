@@ -1,21 +1,21 @@
-# smash-bgm-property
+# smash-sli
 
 A Rust library for working with `bgm_property.bin` files from Smash Ultimate.
 
 ### Example Usage
 
 ```rust
-use bgm_property::BgmPropertyFile;
+use sli::SliFile;
 
-let mut file = BgmPropertyFile::open("bgm_property.bin")?;
+let mut file = SliFile::open("soundlabelinfo.sli")?;
 
 for entry in file.entries() {
-    println!("name_id: {:#X}", entry.name_id);
+    println!("tone_id: {:#X}", entry.tone_id);
 }
 
-for entry in file.entries_mut() {
-    entry.loop_start_sample = 0;
+for (i, entry) in file.entries_mut().enumerate() {
+    entry.nus3bank_id = 5000;
 }
 
-file.save("bgm_property.bin")?;
+file.save("soundlabelinfo.sli")?;
 ```
