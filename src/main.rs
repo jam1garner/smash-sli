@@ -19,7 +19,7 @@ fn main() {
     match SliFile::open(&args.in_file) {
         Ok(bgm_prop_file) => {
             let _ = sli::set_labels(
-                args.labels.as_deref().unwrap_or(Path::new("bgm_hashes.txt"))
+                args.labels.as_deref().unwrap_or(Path::new("tone_labels.txt"))
             );
 
             fs::write(&args.out_file, serde_yaml::to_string(&bgm_prop_file).unwrap()).unwrap();
