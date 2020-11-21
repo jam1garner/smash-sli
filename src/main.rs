@@ -5,11 +5,12 @@ use std::path::{Path, PathBuf};
 use std::fs;
 
 #[derive(StructOpt)]
+#[structopt(about = "A tool for converting between Smash Ultimate sound label info files and yaml")]
 struct Args {
     in_file: PathBuf,
     out_file: PathBuf,
 
-    #[structopt(short, long)]
+    #[structopt(short, long, about = "newline-separated hash labels to use")]
     labels: Option<PathBuf>,
 }
 
