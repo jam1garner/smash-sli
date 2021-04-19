@@ -6,7 +6,7 @@ use binwrite::{BinWrite, WriterOption};
 
 use std::fs::File;
 use std::path::Path;
-use std::io::{self, Write, BufReader, BufWriter};
+use std::io::{self, Read, Seek, Write, BufReader, BufWriter};
 
 #[cfg(feature = "derive_serde")]
 use serde::{Serialize, Deserialize};
@@ -115,6 +115,10 @@ mod serde_hash40 {
 
 
 impl SliFile {
+    pub fn read<R: Read + Seek>(reader: &mut R) -> Result<Self> {
+        reader.read_le()
+    }
+
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
         BufReader::new(File::open(path)?).read_le()
     }
