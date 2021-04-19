@@ -136,7 +136,7 @@ impl SliFile {
         SliFile(entries)
     }
 
-    pub fn entries(&self) -> &Vec<Entry> {
+    pub fn entries(&self) -> &[Entry] {
         &self.0
     }
 
