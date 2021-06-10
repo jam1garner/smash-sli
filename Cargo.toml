@@ -3,6 +3,10 @@ name = "smash-sli"
 version = "0.8.1"
 authors = ["jam1garner <8260240+jam1garner@users.noreply.github.com>"]
 edition = "2018"
+description = "A small library for working with soundlabelinfo.sli files from Smash Ultimate"
+license = "MIT"
+documentation = "https://docs.rs/smash-sli"
+repository = "https://github.com/jam1garner/smash-sli"
 
 [lib]
 name = "sli"
