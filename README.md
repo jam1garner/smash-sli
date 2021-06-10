@@ -1,6 +1,6 @@
 # smash-sli
 
-A Rust library for working with `bgm_property.bin` files from Smash Ultimate.
+A Rust library for working with `soundlabelinfo.sli` files from Smash Ultimate.
 
 ### Example Usage
 
