@@ -1,0 +1,10 @@
+[package]
+name = "sli_yaml"
+version = "0.9.0"
+authors = ["jam1garner <8260240+jam1garner@users.noreply.github.com>"]
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.3", features = ["derive"] }
+sli_lib = { path = "../sli_lib", features = ["serde"] }
+serde_yaml = { version = "0.9" }
