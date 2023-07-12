@@ -4,7 +4,7 @@ use std::{
 };
 
 use clap::Parser;
-use sli_lib::{Hash40, SliFile};
+use smash_sli::{Hash40, SliFile};
 
 /// Convert soundlabelinfo.sli files to and from YAML
 #[derive(Parser)]

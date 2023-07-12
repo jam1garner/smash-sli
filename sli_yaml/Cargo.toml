@@ -6,5 +6,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.3", features = ["derive"] }
-sli_lib = { path = "../sli_lib", features = ["serde"] }
+smash-sli = { path = "../smash-sli", features = ["serde"] }
 serde_yaml = { version = "0.9" }

@@ -1,2 +1,2 @@
 [workspace]
-members = ["sli_lib", "sli_yaml"]
+members = ["smash-sli", "sli_yaml"]

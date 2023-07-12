@@ -1,6 +1,10 @@
-# sli_lib
+# smash-sli
 
 A Rust library for reading and writing `soundlabelinfo.sli` files from Super Smash Bros. Ultimate.
+
+```
+cargo add smash-sli
+```
 
 ## sli_yaml
 
